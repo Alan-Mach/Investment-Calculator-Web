@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ICIF Investment Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            },
+            startup: {
+                typeset: false
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <nav class="tabs">
+        <button class="tab-link active" onclick="openTab(event, 'calc-tab')">Calculator</button>
+        <button class="tab-link" onclick="openTab(event, 'about-tab')">About the Formula</button>
+        <span id="status">Loading Engine...</span>
+    </nav>
+
+    <div id="calc-tab" class="tab-content active">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="field">
+                    <label for="mode">Mode</label>
+                    <select id="mode" onchange="updateLabels()">
+                        <option value="2">Final Value (A)</option>
+                        <option value="1">Initial Contribution (c)</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="main-input" id="main-label">Initial Contribution ($)</label>
+                    <input type="number" id="main-input" value="1000">
+                </div>
+                <div class="field">
+                    <label for="r">Return Rate (r %)</label>
+                    <input type="number" id="r" value="10" step="0.1">
+                </div>
+                <div class="field">
+                    <label for="i">Inflation Rate (i %)</label>
+                    <input type="number" id="i" value="3" step="0.1">
+                </div>
+                <div class="field">
+                    <label for="t">Years (t)</label>
+                    <input type="number" id="t" value="40">
+                </div>
+                <div class="field">
+                    <label for="n">Freq per Year (n)</label>
+                    <input type="number" id="n" value="12">
+                </div>
+                <hr>
+                <div class="field check-field">
+                    <input type="checkbox" id="log-scale" onchange="run()">
+                    <label for="log-scale">Logarithmic Scale</label>
+                </div>
+                <button onclick="run()" class="btn-primary">Calculate</button>
+                <button onclick="resetZoom()" class="btn-secondary">Reset Zoom</button>
+            </aside>
+
+            <main class="chart-area">
+                <div class="chart-wrapper">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </main>
+
+            <section class="data-table-sidebar">
+                <div class="table-header-actions">
+                    <h3>Data Table</h3>
+                    <button id="download-btn" onclick="downloadCSV()" disabled class="btn-small">Export CSV</button>
+                </div>
+                <div class="table-container">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Contrib.</th>
+                                <th>Total Cont.</th>
+                                <th>Portfolio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="about-tab" class="tab-content">
+        <article class="about-container" id="markdown-target">
+            </article>
+    </div>
+
+    <script src="engine.js"></script>
+    <script src="app.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

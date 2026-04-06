@@ -1,10 +1,13 @@
-name: Deploy ICIF Calculator Website
+name: Deploy ICIF Calculator
 on:
   push:
     branches: [ main ]
 
+# Grant permissions for GitHub Pages deployment
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -18,9 +21,6 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Verify Emscripten
-        run: emcc -v
-
       - name: Compile Engine
         run: |
           emcc engine.c -O3 \
@@ -31,8 +31,19 @@ jobs:
           -s MODULARIZE=0 \
           -o engine.js
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      # DEBUG STEP: This lets you see in the Action logs if the files exist
+      - name: List files for verification
+        run: ls -lh
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: .
-          branch: gh-pages
+          # This uploads the entire root directory, including untracked engine.js/wasm
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

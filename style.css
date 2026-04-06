@@ -286,3 +286,67 @@ tr:hover {
     display: block;
     margin-bottom: 5px;
 }
+
+/* Mobile Layout for screens smaller than 768px */
+@media (max-width: 768px) {
+    body, html {
+        overflow-y: auto; /* Allow the main page to scroll vertically */
+    }
+
+    .tab-content {
+        height: auto;
+    }
+
+    .main-layout {
+        display: flex;
+        flex-direction: column; /* Stack sections vertically */
+        height: auto;
+    }
+
+    /* Section 1: Function Inputs */
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #d0d7de;
+        padding: 20px;
+        order: 1; /* Force top position */
+    }
+
+    /* Section 2: Graph */
+    .chart-area {
+        width: 100%;
+        height: 400px;
+        padding: 10px;
+        order: 2;
+    }
+
+    /* Section 3: Data Table */
+    .data-table-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #d0d7de;
+        height: 500px;
+        order: 3;
+    }
+
+    .table-container {
+        max-height: 440px; /* Internal scroll bar */
+        overflow-y: auto;
+    }
+
+    /* About Tab adjustments */
+    .about-container {
+        padding: 20px;
+    }
+    
+    .variables-grid {
+        grid-template-columns: 1fr; /* Stack variable definitions */
+    }
+    
+    /* Ensure long equations don't break the screen width */
+    .formula-box {
+        overflow-x: auto;
+        padding: 15px;
+        font-size: 1em;
+    }
+}

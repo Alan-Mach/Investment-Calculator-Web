@@ -1,6 +1,20 @@
 let chart = null;
 let lastData = null;
 
+function getModule() {
+    if (typeof Module !== 'undefined') return Module;
+    console.error("Emscripten Module not yet initialized");
+    return null;
+}
+
+// Emscripten callback: Only runs when the WASM is fully compiled
+if (typeof Module !== 'undefined') {
+    Module.onRuntimeInitialized = () => {
+        const statusEl = document.getElementById('status');
+        if (statusEl) statusEl.innerText = "Engine Ready";
+    };
+}
+
 // Tab Switching Logic
 async function openTab(evt, tabName) {
     const contents = document.getElementsByClassName("tab-content");

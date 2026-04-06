@@ -1,0 +1,38 @@
+name: Deploy ICIF Calculator Website
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+
+      - name: Verify Emscripten
+        run: emcc -v
+
+      - name: Compile Engine
+        run: |
+          emcc engine.c -O3 \
+          -s WASM=1 \
+          -s ALLOW_MEMORY_GROWTH=1 \
+          -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
+          -s EXPORTED_FUNCTIONS='["_calculate_icif_table", "_malloc", "_free"]' \
+          -s MODULARIZE=0 \
+          -o engine.js
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages
